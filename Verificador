@@ -1,0 +1,41 @@
+import java.util.LinkedList;
+
+import modelo.AutomataFinito.SimboloInvalidoException;
+
+public class Verificador {
+
+	/*
+	 * Determina si una cadena pertenece al lenguaje del automata finito.
+	 */
+	public boolean perteneceAlLenguaje(String cadena, AutomataFinito automataFinito) {
+
+		System.out.println("Verificando si la cadena \"" + cadena + "\" pertenece al lenguaje dado...");
+		LinkedList<Character> queue = new LinkedList<>();
+		int estadoActual = 0;
+
+		for (char c : cadena.toCharArray()) {
+			queue.add(c);
+		}
+
+		while (!queue.isEmpty()) {
+
+			try {
+				estadoActual = automataFinito.getSiguienteEstado(estadoActual, queue.poll());
+				if (estadoActual == -1) {
+					return false;
+				}
+			} catch (SimboloInvalidoException e) {
+				System.out.println(e.getMessage());
+			}
+
+		}
+
+		/*
+		 * Si al vaciar la cola el estado actual es de terminacion, la cadena pertenece
+		 * al lenguaje
+		 */
+		return automataFinito.esEstadoDeTerminacion(estadoActual);
+
+	}
+
+}
