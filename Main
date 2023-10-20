@@ -1,0 +1,70 @@
+import java.util.Scanner;
+
+import modelo.AutomataFinito;
+import modelo.IODataFile;
+import modelo.IODataFile.AutomataNoEncontradoException;
+import modelo.Verificador;
+
+public class Main {
+
+	public static void main(String[] args) {
+
+		Scanner sc = new Scanner(System.in);
+		AutomataFinito automata;
+
+		System.out.println("**[Bienvenido al mejor laboratorio de automatas finitos del mundo]**");
+		System.out.print("¿Desea cargar un automata existente? Ingrese SI o NO\n>> ");
+		boolean deseaCargarUnAutomata = sc.next().trim().toUpperCase().equals("SI") ? true : false;
+
+		if (deseaCargarUnAutomata) {
+
+			System.out.print("Ingrese el nombre del automata:\n>> ");
+			String nombreAutomata = sc.next();
+			try {
+				automata = IODataFile.recuperarAutomata(nombreAutomata);
+				Verificador ver = new Verificador();
+				System.out.println("Ingresa una cadena, vamos a verificar si pertenece al lenguaje...");
+				String cadena = sc.next();
+				boolean pertenece = ver.perteneceAlLenguaje(cadena, automata);
+				System.out.println(pertenece ? "Si pertenece! :D" : "No pertenece! :(");
+			} catch (AutomataNoEncontradoException e) {
+				System.out.println(e.getMessage());
+			}
+
+		} else {
+
+			System.out.println("Vamos a crear un automata desde 0.");
+			System.out.print("¿Cuantos simbolos tiene tu alfabeto?\n>> ");
+			int cantidadDeSimbolos = sc.nextInt();
+			char[] alfabeto = new char[cantidadDeSimbolos];
+			for (int i = 0; i < cantidadDeSimbolos; i++) {
+				System.out.print("Ingresa el caracter #" + i + "\n>> ");
+				String caracter = sc.next();
+				alfabeto[i] = caracter.charAt(0);
+			}
+
+			System.out.print("¿Cuantos estados tiene tu automata?\n>> ");
+			int cantidadDeEstados = sc.nextInt();
+			automata = new AutomataFinito(alfabeto, cantidadDeEstados);
+
+			automata.llenarTablaDeTransicion();
+
+			System.out.print("Deseas guardar este automata? Ingrese SI o NO\n>> ");
+			boolean deseaGuardarElAutomata = sc.next().trim().toUpperCase().equals("SI") ? true : false;
+			if (deseaGuardarElAutomata) {
+				System.out.print("Ingrese el nombre del archivo a guardar (sin espacios):\n>> ");
+				String nombreAutomata = sc.next();
+				IODataFile.guardarAutomata(automata, nombreAutomata);
+			}
+
+			Verificador ver = new Verificador();
+			System.out.println("Ingresa una cadena, vamos a verificar si pertenece al lenguaje...");
+			String cadena = sc.next();
+			boolean pertenece = ver.perteneceAlLenguaje(cadena, automata);
+			System.out.println(pertenece ? "Si pertenece! :D" : "No pertenece! :(");
+
+		}
+
+	}
+
+}
