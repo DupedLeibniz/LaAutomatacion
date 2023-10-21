@@ -1,0 +1,80 @@
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
+public class Automata implements Serializable {
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private List<Estado> estados;
+	private Estado estadoInicial;
+
+	public Automata(Estado estadoInicial) {
+		this.estadoInicial = estadoInicial;
+		estados = new ArrayList<>();
+	}
+
+	/*
+	 * Determina si una cadena pertenece al lenguaje del automata.
+	 */
+	public boolean perteneceAlLenguaje(String cadena) {
+
+		Queue<Character> simbolos = new LinkedList<>();
+		Estado estadoActual = estadoInicial;
+
+		for (char c : cadena.toCharArray()) {
+			simbolos.add(c);
+		}
+
+		while (!simbolos.isEmpty()) {
+
+			// Si no hay hacia donde moverse, la cadena no pertenece al lenguaje
+			if (estadoActual.moverse(simbolos.peek()) == null) {
+				return false;
+			}
+			// Si si hay hacia donde moverse, actualizar el estado actual
+			estadoActual = estadoActual.moverse(simbolos.poll());
+		}
+
+		// Si el estado actual es de terminacion, la cadena pertenece al lenguaje
+		return estadoActual.esDeTerminacion();
+
+	}
+
+	public void agregarEstado(Estado estado) {
+		if (getEstado(estado.getNombre()) != null) {
+			estados.add(estado);
+		}
+	}
+
+	public List<Estado> getEstados() {
+		return estados;
+	}
+
+	public void setEstados(List<Estado> estados) {
+		this.estados = estados;
+	}
+
+	public Estado getEstadoInicial() {
+		return estadoInicial;
+	}
+
+	public void setEstadoInicial(Estado estadoInicial) {
+		this.estadoInicial = estadoInicial;
+	}
+
+	public Estado getEstado(String nombre) {
+		for (Estado estado : estados) {
+			if (estado.getNombre().equals(nombre)) {
+				return estado;
+			}
+		}
+		return null;
+	}
+
+}
