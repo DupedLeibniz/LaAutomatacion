@@ -1,0 +1,37 @@
+public class Transicion {
+
+	private Estado estadoFuente; // El estado fuente
+	private Estado estadoSiguiente; // El estado siguiente
+	private char simbolo; // El simbolo requerido para realizar la transicion
+
+	public Transicion(Estado estadoFuente, Estado estadoSiguiente, char simbolo) {
+		this.estadoFuente = estadoFuente;
+		this.estadoSiguiente = estadoSiguiente;
+		this.simbolo = simbolo;
+	}
+
+	public Estado getEstadoFuente() {
+		return estadoFuente;
+	}
+
+	public void setEstadoFuente(Estado delEstado) {
+		this.estadoFuente = delEstado;
+	}
+
+	public Estado getEstadoSiguiente() {
+		return estadoSiguiente;
+	}
+
+	public void setEstadoSiguiente(Estado alEstado) {
+		this.estadoSiguiente = alEstado;
+	}
+
+	public char getSimbolo() {
+		return simbolo;
+	}
+
+	public void setSimbolo(char simbolo) {
+		this.simbolo = simbolo;
+	}
+
+}
