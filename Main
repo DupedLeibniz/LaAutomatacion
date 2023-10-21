@@ -1,70 +1,33 @@
-import java.util.Scanner;
-
-import modelo.AutomataFinito;
-import modelo.IODataFile;
-import modelo.IODataFile.AutomataNoEncontradoException;
-import modelo.Verificador;
+import modelo.Automata;
+import modelo.Estado;
 
 public class Main {
 
 	public static void main(String[] args) {
 
-		Scanner sc = new Scanner(System.in);
-		AutomataFinito automata;
+		// Ejemplo de como hacer el automata "Cadenas binarias de longitud par"
 
-		System.out.println("**[Bienvenido al mejor laboratorio de automatas finitos del mundo]**");
-		System.out.print("¿Desea cargar un automata existente? Ingrese SI o NO\n>> ");
-		boolean deseaCargarUnAutomata = sc.next().trim().toUpperCase().equals("SI") ? true : false;
+		Estado q0 = new Estado("q0");
+		Estado q1 = new Estado("q1");
+		Estado q2 = new Estado("q2");
 
-		if (deseaCargarUnAutomata) {
+		q0.setEsDeInicio(true);
+		q2.setEsDeTerminacion(true);
 
-			System.out.print("Ingrese el nombre del automata:\n>> ");
-			String nombreAutomata = sc.next();
-			try {
-				automata = IODataFile.recuperarAutomata(nombreAutomata);
-				Verificador ver = new Verificador();
-				System.out.println("Ingresa una cadena, vamos a verificar si pertenece al lenguaje...");
-				String cadena = sc.next();
-				boolean pertenece = ver.perteneceAlLenguaje(cadena, automata);
-				System.out.println(pertenece ? "Si pertenece! :D" : "No pertenece! :(");
-			} catch (AutomataNoEncontradoException e) {
-				System.out.println(e.getMessage());
-			}
+		q0.agregarTransicion(q1, '1');
+		q0.agregarTransicion(q1, '0');
+		q1.agregarTransicion(q2, '1');
+		q1.agregarTransicion(q2, '0');
+		q2.agregarTransicion(q1, '1');
+		q2.agregarTransicion(q1, '0');
 
-		} else {
+		Automata automata = new Automata(q0);
+		automata.agregarEstado(q0);
+		automata.agregarEstado(q1);
+		automata.agregarEstado(q2);
 
-			System.out.println("Vamos a crear un automata desde 0.");
-			System.out.print("¿Cuantos simbolos tiene tu alfabeto?\n>> ");
-			int cantidadDeSimbolos = sc.nextInt();
-			char[] alfabeto = new char[cantidadDeSimbolos];
-			for (int i = 0; i < cantidadDeSimbolos; i++) {
-				System.out.print("Ingresa el caracter #" + i + "\n>> ");
-				String caracter = sc.next();
-				alfabeto[i] = caracter.charAt(0);
-			}
-
-			System.out.print("¿Cuantos estados tiene tu automata?\n>> ");
-			int cantidadDeEstados = sc.nextInt();
-			automata = new AutomataFinito(alfabeto, cantidadDeEstados);
-
-			automata.llenarTablaDeTransicion();
-
-			System.out.print("Deseas guardar este automata? Ingrese SI o NO\n>> ");
-			boolean deseaGuardarElAutomata = sc.next().trim().toUpperCase().equals("SI") ? true : false;
-			if (deseaGuardarElAutomata) {
-				System.out.print("Ingrese el nombre del archivo a guardar (sin espacios):\n>> ");
-				String nombreAutomata = sc.next();
-				IODataFile.guardarAutomata(automata, nombreAutomata);
-			}
-
-			Verificador ver = new Verificador();
-			System.out.println("Ingresa una cadena, vamos a verificar si pertenece al lenguaje...");
-			String cadena = sc.next();
-			boolean pertenece = ver.perteneceAlLenguaje(cadena, automata);
-			System.out.println(pertenece ? "Si pertenece! :D" : "No pertenece! :(");
-
-		}
+		String cadena = "1010";
+		System.out.println(automata.perteneceAlLenguaje(cadena) ? "Si pertenece :D!" : "No pertenece :(");
 
 	}
-
 }
