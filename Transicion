@@ -1,4 +1,11 @@
-public class Transicion {
+import java.io.Serializable;
+
+public class Transicion implements Serializable {
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private Estado estadoFuente; // El estado fuente
 	private Estado estadoSiguiente; // El estado siguiente
