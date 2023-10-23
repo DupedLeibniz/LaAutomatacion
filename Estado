@@ -1,36 +1,56 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Estado {
+public class Estado implements Serializable {
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private String nombre; // El identificador del estado
-	private boolean esDeInicio; // Si el estado es de inicio
-	private boolean esDeTerminacion; // Si el estado es de terminacion
-	private List<Transicion> transiciones; // Los "caminos" que salen del estado
+	private boolean esDeAceptacion; // Si el estado es de aceptacion
+	private List<Transicion> transiciones; // Los caminos que salen del estado
 
 	public Estado(String nombre) {
 		this.nombre = nombre;
-		this.esDeInicio = false;
-		this.esDeTerminacion = false;
+		this.esDeAceptacion = false;
 		transiciones = new ArrayList<>();
 	}
 
 	public Estado moverse(char simbolo) {
+
 		for (Transicion t : transiciones) {
 			if (t.getSimbolo() == simbolo) {
 				return t.getEstadoSiguiente(); // Si hay un camino para el simbolo, devolver el estado al que lleva tal
 												// camino
 			}
 		}
+
 		return null;
+
 	}
 
-	public void agregarTransicion(Estado siguienteEstado, char simbolo) {
+	public void agregarTransicion(Estado siguienteEstado, char simbolo) throws NoDeterministaException {
+
+		// Evita que se agregue mas de un camino para el mismo simbolo
+		for (Transicion t : transiciones) {
+			if (t.getSimbolo() == simbolo) {
+				throw new NoDeterministaException(
+						"El estado \'" + nombre + "\' ya tiene un camino para el simbolo \'" + simbolo + "\'!");
+			}
+		}
+
 		transiciones.add(new Transicion(this, siguienteEstado, simbolo));
 	}
 
 	public List<Transicion> getTransiciones() {
 		return transiciones;
+	}
+
+	public void setTransiciones(List<Transicion> transiciones) {
+		this.transiciones = transiciones;
 	}
 
 	public String getNombre() {
@@ -41,20 +61,23 @@ public class Estado {
 		this.nombre = nombre;
 	}
 
-	public boolean esDeInicio() {
-		return esDeInicio;
-	}
-
-	public void setEsDeInicio(boolean esDeInicio) {
-		this.esDeInicio = esDeInicio;
-	}
-
 	public boolean esDeTerminacion() {
-		return esDeTerminacion;
+		return esDeAceptacion;
 	}
 
-	public void setEsDeTerminacion(boolean esDeTerminacion) {
-		this.esDeTerminacion = esDeTerminacion;
+	public void setEsDeAceptacion(boolean esDeTerminacion) {
+		this.esDeAceptacion = esDeTerminacion;
+	}
+
+	public static class NoDeterministaException extends Exception {
+		/**
+		 *
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public NoDeterministaException(String mensaje) {
+			super(mensaje);
+		}
 	}
 
 }
