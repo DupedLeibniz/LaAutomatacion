@@ -6,12 +6,12 @@ import java.io.ObjectOutputStream;
 
 public class IODataFile {
 
-	public static void guardarAutomata(AutomataFinito automataFinito, String nombreAutomata) {
+	public static void guardarAutomata(Automata automata, String nombreAutomata) {
 
 		try {
 			FileOutputStream fileOutputStream = new FileOutputStream(nombreAutomata + ".ser");
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-			objectOutputStream.writeObject(automataFinito);
+			objectOutputStream.writeObject(automata);
 			objectOutputStream.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -19,13 +19,12 @@ public class IODataFile {
 
 	}
 
-	public static AutomataFinito recuperarAutomata(String nombreAutomata) throws AutomataNoEncontradoException {
+	public static Automata recuperarAutomata(String nombreAutomata) throws AutomataNoEncontradoException {
 		try {
 			ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(nombreAutomata + ".ser"));
-			AutomataFinito automataFinito = (AutomataFinito) objectInputStream.readObject();
+			Automata automata = (Automata) objectInputStream.readObject();
 			objectInputStream.close();
-			System.out.println("El automata fue recuperado con exito.");
-			return automataFinito;
+			return automata;
 		} catch (Exception e) {
 			throw new AutomataNoEncontradoException(
 					"Lo sentimos, no se encontro ningun automata bajo el nombre \"" + nombreAutomata + "\".");
