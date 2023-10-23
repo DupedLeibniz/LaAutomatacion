@@ -13,8 +13,9 @@ public class Automata implements Serializable {
 
 	private List<Estado> estados;
 	private Estado estadoInicial;
+	private String nombreAutomata;
 
-	public Automata(Estado estadoInicial) {
+	public Automata(String nombreAutomata, Estado estadoInicial) {
 		this.estadoInicial = estadoInicial;
 		estados = new ArrayList<>();
 	}
@@ -75,6 +76,14 @@ public class Automata implements Serializable {
 
 	public void setEstadoInicial(Estado estadoInicial) {
 		this.estadoInicial = estadoInicial;
+	}
+
+	public String getNombreAutomata() {
+		return nombreAutomata;
+	}
+
+	public void setNombreAutomata(String nombreAutomata) {
+		this.nombreAutomata = nombreAutomata;
 	}
 
 }
